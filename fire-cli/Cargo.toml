@@ -1,0 +1,22 @@
+[package]
+name = "fire-cli"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "fire"
+path = "src/main.rs"
+
+[dependencies]
+fire-core = { workspace = true }
+fire-config = { workspace = true }
+fire-runner = { workspace = true }
+fire-lang-rust = { workspace = true }
+fire-lang-python = { workspace = true }
+fire-lang-ts = { workspace = true }
+fire-lang-cpp = { workspace = true }
+fire-lang-java = { workspace = true }
+anyhow = { workspace = true }
+clap = { workspace = true }
+clap_complete = { workspace = true }
+owo-colors = { workspace = true }

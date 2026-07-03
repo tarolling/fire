@@ -1,0 +1,39 @@
+[workspace]
+resolver = "3"
+members = [
+    "fire-cli",
+    "fire-core",
+    "fire-config",
+    "fire-runner",
+    "fire-lang-cpp",
+    "fire-lang-java",
+    "fire-lang-python",
+    "fire-lang-rust",
+    "fire-lang-ts",
+]
+
+[profile.ultra-release]
+inherits = "release"
+codegen-units = 1
+lto = true
+opt-level = 3
+strip = true
+
+[workspace.dependencies]
+anyhow = "1"
+clap = { version = "4.6.1", features = ["derive"] }
+clap_complete = "4"
+owo-colors = "4"
+serde = { version = "1", features = ["derive"] }
+thiserror = "2"
+toml = "1.1.2"
+which = "7"
+
+fire-core = { path = "fire-core" }
+fire-config = { path = "fire-config" }
+fire-runner = { path = "fire-runner" }
+fire-lang-cpp = { path = "fire-lang-cpp" }
+fire-lang-java = { path = "fire-lang-java" }
+fire-lang-python = { path = "fire-lang-python" }
+fire-lang-rust = { path = "fire-lang-rust" }
+fire-lang-ts = { path = "fire-lang-ts" }

@@ -1,0 +1,8 @@
+[package]
+name = "fire-lang-ts"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+fire-core = { workspace = true }
+fire-runner = { workspace = true }
