@@ -120,7 +120,11 @@ pub struct ProjectContext {
 }
 
 impl ProjectContext {
-    pub fn new(project: ProjectConfig, workspace_root: &Path, passthrough_flags: Vec<String>) -> Self {
+    pub fn new(
+        project: ProjectConfig,
+        workspace_root: &Path,
+        passthrough_flags: Vec<String>,
+    ) -> Self {
         let project_root = workspace_root.join(&project.path);
         Self {
             project,
@@ -177,8 +181,17 @@ pub fn setup_tool_env(workspace_root: &Path) {
 
     // Prepend .fire tool directories to PATH
     if let Some(current_path) = std::env::var_os("PATH") {
-        let extra_dirs = [&bin_dir, &cargo_bin, &node_bin, &cmake_bin, &vcpkg_dir, &jdk_bin, &gradle_bin];
-        let all_paths = extra_dirs.iter()
+        let extra_dirs = [
+            &bin_dir,
+            &cargo_bin,
+            &node_bin,
+            &cmake_bin,
+            &vcpkg_dir,
+            &jdk_bin,
+            &gradle_bin,
+        ];
+        let all_paths = extra_dirs
+            .iter()
             .map(|d| d.to_path_buf())
             .chain(std::env::split_paths(&current_path));
         if let Ok(new_path) = std::env::join_paths(all_paths) {
@@ -266,7 +279,10 @@ mod tests {
         assert_eq!("rs".parse::<Language>().unwrap(), Language::Rust);
         assert_eq!("python".parse::<Language>().unwrap(), Language::Python);
         assert_eq!("py".parse::<Language>().unwrap(), Language::Python);
-        assert_eq!("typescript".parse::<Language>().unwrap(), Language::TypeScript);
+        assert_eq!(
+            "typescript".parse::<Language>().unwrap(),
+            Language::TypeScript
+        );
         assert_eq!("ts".parse::<Language>().unwrap(), Language::TypeScript);
         assert_eq!("cpp".parse::<Language>().unwrap(), Language::Cpp);
         assert_eq!("c++".parse::<Language>().unwrap(), Language::Cpp);

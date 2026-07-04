@@ -1,8 +1,8 @@
 use std::path::Path;
 
-use fire_core::{LanguageBackend, Result, ProjectContext};
-use fire_runner::{download_and_extract, run_shell, tool_exists, CommandRunner};
+use fire_core::{LanguageBackend, ProjectContext, Result};
 use fire_runner::platform;
+use fire_runner::{CommandRunner, download_and_extract, run_shell, tool_exists};
 
 /// Pinned tool versions — bump these explicitly to upgrade.
 const JDK_VERSION: &str = "21.0.7+6";
@@ -34,12 +34,7 @@ impl LanguageBackend for JavaBackend {
     fn init(&self, ctx: &ProjectContext) -> Result<()> {
         std::fs::create_dir_all(&ctx.project_root)?;
 
-        let java_version = ctx
-            .project
-            .toolchain
-            .version
-            .as_deref()
-            .unwrap_or("21");
+        let java_version = ctx.project.toolchain.version.as_deref().unwrap_or("21");
 
         // Use Gradle to generate a Java application project.
         // Providing all args avoids interactive prompts.
@@ -47,11 +42,16 @@ impl LanguageBackend for JavaBackend {
             "gradle",
             &[
                 "init",
-                "--type", "java-application",
-                "--dsl", "kotlin",
-                "--java-version", java_version,
-                "--project-name", &ctx.project.name,
-                "--package", &format!("com.{}", ctx.project.name.replace('-', "")),
+                "--type",
+                "java-application",
+                "--dsl",
+                "kotlin",
+                "--java-version",
+                java_version,
+                "--project-name",
+                &ctx.project.name,
+                "--package",
+                &format!("com.{}", ctx.project.name.replace('-', "")),
             ],
             &ctx.project_root,
         )?;
@@ -126,7 +126,11 @@ impl LanguageBackend for JavaBackend {
         let build_file = ctx.project_root.join("app").join("build.gradle.kts");
         let content = std::fs::read_to_string(&build_file)?;
 
-        let config = if dev { "testImplementation" } else { "implementation" };
+        let config = if dev {
+            "testImplementation"
+        } else {
+            "implementation"
+        };
         let dep_line = format!("    {}(\"{}\")", config, dep);
 
         // Insert before the closing brace of the dependencies block
@@ -202,7 +206,10 @@ impl LanguageBackend for JavaBackend {
 
         // 2. Ensure Gradle is available (for initial project scaffolding)
         if !tool_exists("gradle") {
-            eprintln!("  installing gradle v{} to .fire/gradle/...", GRADLE_VERSION);
+            eprintln!(
+                "  installing gradle v{} to .fire/gradle/...",
+                GRADLE_VERSION
+            );
             self.install_gradle(ctx)?;
         }
 
@@ -253,7 +260,13 @@ impl JavaBackend {
 
         let url = format!(
             "https://github.com/adoptium/temurin{}-binaries/releases/download/jdk-{}/OpenJDK{}U-jdk_{}_{}_hotspot_{}.{}",
-            major, version_url, major, platform::jdk_arch(), platform::jdk_os(), version_file, platform::jdk_archive_ext()
+            major,
+            version_url,
+            major,
+            platform::jdk_arch(),
+            platform::jdk_os(),
+            version_file,
+            platform::jdk_archive_ext()
         );
         download_and_extract(&url, &jdk_dir, 1)?;
         Ok(())

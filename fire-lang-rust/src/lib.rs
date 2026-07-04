@@ -1,7 +1,7 @@
 use std::path::Path;
 
-use fire_core::{LanguageBackend, Result, ProjectContext};
-use fire_runner::{run_shell, tool_exists, CommandRunner};
+use fire_core::{LanguageBackend, ProjectContext, Result};
+use fire_runner::{CommandRunner, run_shell, tool_exists};
 
 pub struct RustBackend;
 
@@ -68,7 +68,11 @@ impl LanguageBackend for RustBackend {
     }
 
     fn lint(&self, ctx: &ProjectContext) -> Result<()> {
-        CommandRunner::run("cargo", &["clippy", "--", "-D", "warnings"], &ctx.project_root)
+        CommandRunner::run(
+            "cargo",
+            &["clippy", "--", "-D", "warnings"],
+            &ctx.project_root,
+        )
     }
 
     fn clean(&self, ctx: &ProjectContext) -> Result<()> {
@@ -99,11 +103,7 @@ impl LanguageBackend for RustBackend {
                 &ctx.workspace_root,
             )?;
             if ctx.project_root.exists() {
-                CommandRunner::run(
-                    "rustup",
-                    &["override", "set", version],
-                    &ctx.project_root,
-                )?;
+                CommandRunner::run("rustup", &["override", "set", version], &ctx.project_root)?;
             }
         }
         Ok(())

@@ -1,11 +1,10 @@
 use std::path::Path;
 
-use fire_core::{FireError, LanguageBackend, Result, ProjectContext};
-use fire_runner::{
-    download_and_extract, download_file, make_executable, run_shell, tool_exists,
-    CommandRunner,
-};
+use fire_core::{FireError, LanguageBackend, ProjectContext, Result};
 use fire_runner::platform;
+use fire_runner::{
+    CommandRunner, download_and_extract, download_file, make_executable, run_shell, tool_exists,
+};
 
 /// Pinned tool versions — bump these explicitly to upgrade.
 const CMAKE_VERSION: &str = "3.31.6";
@@ -171,7 +170,10 @@ add_executable(${{PROJECT_NAME}} src/{main_file})
         let mut manifest: serde_json::Value = serde_json::from_str(&content)
             .map_err(|e| FireError::Config(format!("invalid vcpkg.json: {}", e)))?;
 
-        if let Some(deps) = manifest.get_mut("dependencies").and_then(|d| d.as_array_mut()) {
+        if let Some(deps) = manifest
+            .get_mut("dependencies")
+            .and_then(|d| d.as_array_mut())
+        {
             let dep_val = serde_json::Value::String(dep.to_string());
             if !deps.contains(&dep_val) {
                 deps.push(dep_val);
@@ -191,7 +193,10 @@ add_executable(${{PROJECT_NAME}} src/{main_file})
         let mut manifest: serde_json::Value = serde_json::from_str(&content)
             .map_err(|e| FireError::Config(format!("invalid vcpkg.json: {}", e)))?;
 
-        if let Some(deps) = manifest.get_mut("dependencies").and_then(|d| d.as_array_mut()) {
+        if let Some(deps) = manifest
+            .get_mut("dependencies")
+            .and_then(|d| d.as_array_mut())
+        {
             deps.retain(|d| d.as_str() != Some(dep));
         }
 
@@ -239,7 +244,10 @@ add_executable(${{PROJECT_NAME}} src/{main_file})
             return Ok(());
         }
         let mut args: Vec<&str> = vec!["-i"];
-        let file_strs: Vec<String> = files.iter().map(|f| f.to_string_lossy().to_string()).collect();
+        let file_strs: Vec<String> = files
+            .iter()
+            .map(|f| f.to_string_lossy().to_string())
+            .collect();
         let file_refs: Vec<&str> = file_strs.iter().map(|s| s.as_str()).collect();
         args.extend(&file_refs);
         CommandRunner::run("clang-format", &args, &ctx.project_root)
@@ -252,7 +260,10 @@ add_executable(${{PROJECT_NAME}} src/{main_file})
             return Ok(());
         }
         let mut args: Vec<&str> = vec!["-p", "build"];
-        let file_strs: Vec<String> = files.iter().map(|f| f.to_string_lossy().to_string()).collect();
+        let file_strs: Vec<String> = files
+            .iter()
+            .map(|f| f.to_string_lossy().to_string())
+            .collect();
         let file_refs: Vec<&str> = file_strs.iter().map(|s| s.as_str()).collect();
         args.extend(&file_refs);
         CommandRunner::run("clang-tidy", &args, &ctx.project_root)
@@ -311,7 +322,10 @@ impl CMakeBackend {
         std::fs::create_dir_all(&cmake_dir)?;
         let url = format!(
             "https://github.com/Kitware/CMake/releases/download/v{}/cmake-{}-{}.{}",
-            CMAKE_VERSION, CMAKE_VERSION, platform::cmake_platform(), platform::cmake_archive_ext()
+            CMAKE_VERSION,
+            CMAKE_VERSION,
+            platform::cmake_platform(),
+            platform::cmake_archive_ext()
         );
         download_and_extract(&url, &cmake_dir, 1)?;
         Ok(())
@@ -328,7 +342,11 @@ impl CMakeBackend {
         );
         download_file(&url, &zip_path)?;
         run_shell(
-            &format!("unzip -o '{}' -d '{}'", zip_path.display(), bin_dir.display()),
+            &format!(
+                "unzip -o '{}' -d '{}'",
+                zip_path.display(),
+                bin_dir.display()
+            ),
             &ctx.workspace_root,
         )?;
         make_executable(&bin_dir.join(format!("ninja{}", platform::exe_suffix())))?;
@@ -341,8 +359,15 @@ impl CMakeBackend {
         let vcpkg_dir_str = vcpkg_dir.to_string_lossy().to_string();
         CommandRunner::run(
             "git",
-            &["clone", "--depth", "1", "--branch", VCPKG_TAG,
-              "https://github.com/microsoft/vcpkg.git", &vcpkg_dir_str],
+            &[
+                "clone",
+                "--depth",
+                "1",
+                "--branch",
+                VCPKG_TAG,
+                "https://github.com/microsoft/vcpkg.git",
+                &vcpkg_dir_str,
+            ],
             &ctx.workspace_root,
         )?;
         let bootstrap = vcpkg_dir.join("bootstrap-vcpkg.sh");

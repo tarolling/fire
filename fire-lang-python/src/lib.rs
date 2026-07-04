@@ -1,7 +1,7 @@
 use std::path::Path;
 
-use fire_core::{LanguageBackend, Result, ProjectContext};
-use fire_runner::{run_shell, tool_exists, CommandRunner};
+use fire_core::{LanguageBackend, ProjectContext, Result};
+use fire_runner::{CommandRunner, run_shell, tool_exists};
 
 /// Pinned tool versions — bump these explicitly to upgrade.
 const UV_VERSION: &str = "0.7.12";
@@ -35,7 +35,14 @@ impl LanguageBackend for PythonBackend {
         // which makes the package installable and `python -m <name>` work.
         CommandRunner::run(
             "uv",
-            &["init", "--lib", "--name", &ctx.project.name, "--vcs", "none"],
+            &[
+                "init",
+                "--lib",
+                "--name",
+                &ctx.project.name,
+                "--vcs",
+                "none",
+            ],
             &ctx.project_root,
         )?;
 
@@ -133,18 +140,10 @@ impl LanguageBackend for PythonBackend {
         }
 
         if let Some(version) = &ctx.project.toolchain.version {
-            CommandRunner::run(
-                "uv",
-                &["python", "install", version],
-                &ctx.workspace_root,
-            )?;
+            CommandRunner::run("uv", &["python", "install", version], &ctx.workspace_root)?;
             // Pin the version inside the project directory (only if it exists)
             if ctx.project_root.exists() {
-                CommandRunner::run(
-                    "uv",
-                    &["python", "pin", version],
-                    &ctx.project_root,
-                )?;
+                CommandRunner::run("uv", &["python", "pin", version], &ctx.project_root)?;
             }
         }
         Ok(())

@@ -1,8 +1,8 @@
 use std::path::Path;
 
-use fire_core::{LanguageBackend, Result, ProjectContext};
-use fire_runner::{download_and_extract, tool_exists, CommandRunner};
+use fire_core::{LanguageBackend, ProjectContext, Result};
 use fire_runner::platform;
+use fire_runner::{download_and_extract, tool_exists, CommandRunner};
 
 /// Pinned tool versions — bump these explicitly to upgrade.
 const NODE_VERSION: &str = "22.16.0";
@@ -202,7 +202,10 @@ impl TypeScriptBackend {
 
         let url = format!(
             "https://nodejs.org/dist/v{}/node-v{}-{}.{}",
-            version, version, platform::node_platform(), platform::node_archive_ext()
+            version,
+            version,
+            platform::node_platform(),
+            platform::node_archive_ext()
         );
         download_and_extract(&url, &node_dir, 1)?;
         Ok(())

@@ -58,10 +58,7 @@ impl CommandRunner {
             tool: program.to_string(),
         })?;
 
-        let output = Command::new(program)
-            .args(args)
-            .current_dir(cwd)
-            .output()?;
+        let output = Command::new(program).args(args).current_dir(cwd).output()?;
 
         if output.status.success() {
             Ok(String::from_utf8_lossy(&output.stdout).to_string())

@@ -58,7 +58,11 @@ pub fn node_platform() -> &'static str {
 
 /// Node.js archive extension.
 pub fn node_archive_ext() -> &'static str {
-    if Os::current() == Os::Windows { "zip" } else { "tar.gz" }
+    if Os::current() == Os::Windows {
+        "zip"
+    } else {
+        "tar.gz"
+    }
 }
 
 /// CMake platform string (e.g. "linux-x86_64", "macos-universal", "windows-x86_64").
@@ -74,7 +78,11 @@ pub fn cmake_platform() -> &'static str {
 
 /// CMake archive extension.
 pub fn cmake_archive_ext() -> &'static str {
-    if Os::current() == Os::Windows { "zip" } else { "tar.gz" }
+    if Os::current() == Os::Windows {
+        "zip"
+    } else {
+        "tar.gz"
+    }
 }
 
 /// Ninja platform string (e.g. "ninja-linux", "ninja-mac", "ninja-win").
@@ -103,15 +111,27 @@ pub fn jdk_arch() -> &'static str {
 }
 
 pub fn jdk_archive_ext() -> &'static str {
-    if Os::current() == Os::Windows { "zip" } else { "tar.gz" }
+    if Os::current() == Os::Windows {
+        "zip"
+    } else {
+        "tar.gz"
+    }
 }
 
 /// Executable suffix (empty on Unix, ".exe" on Windows).
 pub fn exe_suffix() -> &'static str {
-    if Os::current() == Os::Windows { ".exe" } else { "" }
+    if Os::current() == Os::Windows {
+        ".exe"
+    } else {
+        ""
+    }
 }
 
 /// The PATH separator for the current platform.
 pub fn path_separator() -> &'static str {
-    if Os::current() == Os::Windows { ";" } else { ":" }
+    if Os::current() == Os::Windows {
+        ";"
+    } else {
+        ":"
+    }
 }

@@ -1,9 +1,9 @@
 use anyhow::Result;
 use clap::{CommandFactory, Parser, Subcommand};
-use clap_complete::{generate, Shell};
+use clap_complete::{Shell, generate};
 use owo_colors::OwoColorize;
 
-use fire_config::{config_path, discover_workspace, WorkspaceConfig};
+use fire_config::{WorkspaceConfig, config_path, discover_workspace};
 use fire_core::{
     BackendRegistry, FireError, Language, LanguageBackend, ProjectConfig, ProjectContext,
     ToolchainConfig,
@@ -48,7 +48,11 @@ complete -F _fire_dynamic -o default fire
 // ---------------------------------------------------------------------------
 
 #[derive(Parser)]
-#[command(name = "fire", version, about = "Universal project & workspace manager")]
+#[command(
+    name = "fire",
+    version,
+    about = "Universal project & workspace manager"
+)]
 struct Cli {
     #[command(subcommand)]
     command: Commands,
@@ -187,10 +191,7 @@ enum Commands {
 
 fn build_registry() -> BackendRegistry {
     let mut registry = BackendRegistry::new();
-    registry.register(
-        Language::Rust,
-        Box::new(fire_lang_rust::RustBackend::new()),
-    );
+    registry.register(Language::Rust, Box::new(fire_lang_rust::RustBackend::new()));
     registry.register(
         Language::Python,
         Box::new(fire_lang_python::PythonBackend::new()),
@@ -199,18 +200,9 @@ fn build_registry() -> BackendRegistry {
         Language::TypeScript,
         Box::new(fire_lang_ts::TypeScriptBackend::new()),
     );
-    registry.register(
-        Language::Cpp,
-        Box::new(fire_lang_cpp::CMakeBackend::cpp()),
-    );
-    registry.register(
-        Language::C,
-        Box::new(fire_lang_cpp::CMakeBackend::c()),
-    );
-    registry.register(
-        Language::Java,
-        Box::new(fire_lang_java::JavaBackend::new()),
-    );
+    registry.register(Language::Cpp, Box::new(fire_lang_cpp::CMakeBackend::cpp()));
+    registry.register(Language::C, Box::new(fire_lang_cpp::CMakeBackend::c()));
+    registry.register(Language::Java, Box::new(fire_lang_java::JavaBackend::new()));
     registry
 }
 
@@ -374,11 +366,7 @@ fn cmd_new(name: String, lang: String, path: Option<String>) -> Result<()> {
 fn cmd_status() -> Result<()> {
     let (workspace_root, config) = load_workspace()?;
 
-    println!(
-        "{} {}",
-        "workspace:".bold(),
-        config.workspace.name
-    );
+    println!("{} {}", "workspace:".bold(), config.workspace.name);
     println!("{} {}", "     root:".bold(), workspace_root.display());
     println!();
 

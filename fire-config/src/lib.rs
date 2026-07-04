@@ -1,6 +1,6 @@
 use std::path::{Path, PathBuf};
 
-use fire_core::{FireError, Result, ProjectConfig};
+use fire_core::{FireError, ProjectConfig, Result};
 use serde::{Deserialize, Serialize};
 
 const CONFIG_FILE: &str = "fire.toml";
@@ -154,7 +154,10 @@ extra_build_flags = ["--no-cache"]
             config.projects[1].toolchain.version.as_deref(),
             Some("3.12")
         );
-        assert_eq!(config.projects[1].toolchain.extra_build_flags, vec!["--no-cache"]);
+        assert_eq!(
+            config.projects[1].toolchain.extra_build_flags,
+            vec!["--no-cache"]
+        );
     }
 
     #[test]
