@@ -2,7 +2,7 @@ use std::path::Path;
 
 use fire_core::{LanguageBackend, ProjectContext, Result};
 use fire_runner::platform;
-use fire_runner::{download_and_extract, tool_exists, CommandRunner};
+use fire_runner::{CommandRunner, download_and_extract, tool_exists};
 
 /// Pinned tool versions — bump these explicitly to upgrade.
 const NODE_VERSION: &str = "22.16.0";
